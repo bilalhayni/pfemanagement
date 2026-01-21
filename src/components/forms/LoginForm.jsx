@@ -126,29 +126,37 @@ const LoginForm = () => {
         <h1 className="login-title">Se connecter</h1>
         <p className="login-subtitle">Bienvenue! Veuillez vous connecter pour continuer</p>
 
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="login-form" noValidate>
           <div className="form-group">
-            <label className="form-label">Email</label>
+            <label htmlFor="login-email" className="form-label">Email</label>
             <input
+              id="login-email"
               type="email"
               placeholder="Entrez votre email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`form-input ${errors.email ? 'form-input--error' : ''}`}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              aria-invalid={errors.email ? 'true' : 'false'}
+              autoComplete="email"
             />
-            {errors.email && <span className="form-error">{errors.email}</span>}
+            {errors.email && <span id="email-error" className="form-error" role="alert">{errors.email}</span>}
           </div>
 
           <div className="form-group">
-            <label className="form-label">Mot de passe</label>
+            <label htmlFor="login-password" className="form-label">Mot de passe</label>
             <input
+              id="login-password"
               type="password"
               placeholder="Entrez votre mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={`form-input ${errors.password ? 'form-input--error' : ''}`}
+              aria-describedby={errors.password ? 'password-error' : undefined}
+              aria-invalid={errors.password ? 'true' : 'false'}
+              autoComplete="current-password"
             />
-            {errors.password && <span className="form-error">{errors.password}</span>}
+            {errors.password && <span id="password-error" className="form-error" role="alert">{errors.password}</span>}
           </div>
 
           <div className="form-options">

@@ -41,6 +41,48 @@
   gap: 24px;
 }
 
+/* Loading States */
+.dashboard__stats--loading,
+.dashboard__charts--loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Error State */
+.dashboard__error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dashboard__error p {
+  margin: 0;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+.dashboard__error button {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dashboard__error button:hover {
+  background: #b91c1c;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .dashboard__stats {
