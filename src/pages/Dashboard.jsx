@@ -6,7 +6,8 @@ import './Dashboard.css';
 
 const Dashboard = () => {
   // Sample data - replace with actual data from your API
-  const userName = 'Chef';
+  const userName = 'Chef Département';
+  const userEmail = 'chef@ump.ac.ma';
   const userInitials = 'CH';
 
   const stats = [
@@ -51,7 +52,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <Layout pageTitle="Dashboard" userName={userName} userInitials={userInitials}>
+    <Layout pageTitle="Dashboard" userName={userName} userEmail={userEmail} userInitials={userInitials}>
       <div className="dashboard">
         {/* Welcome Section */}
         <div className="dashboard__welcome">
