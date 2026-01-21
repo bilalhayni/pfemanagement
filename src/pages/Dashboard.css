@@ -1,0 +1,69 @@
+/* Dashboard Container */
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Welcome Section */
+.dashboard__welcome {
+  margin-bottom: 32px;
+}
+
+.dashboard__greeting {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 8px 0;
+}
+
+.dashboard__name {
+  color: #4f6bed;
+}
+
+.dashboard__subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Stats Grid */
+.dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Charts Section */
+.dashboard__charts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .dashboard__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .dashboard__charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__greeting {
+    font-size: 24px;
+  }
+
+  .dashboard__subtitle {
+    font-size: 14px;
+  }
+}
