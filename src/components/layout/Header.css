@@ -1,0 +1,113 @@
+/* Header Container */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e8eaed;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Left Section */
+.header__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header__title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+/* Right Section */
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Notification Button */
+.header__notification {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.header__notification:hover {
+  background-color: #f3f4f6;
+}
+
+.header__notification svg {
+  width: 22px;
+  height: 22px;
+  color: #6b7280;
+}
+
+.header__notification-badge {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+
+/* User Avatar */
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header__avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #4f6bed 0%, #3b5bdb 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.header__avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(79, 107, 237, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+  }
+
+  .header__title {
+    font-size: 18px;
+  }
+
+  .header__notification,
+  .header__avatar {
+    width: 36px;
+    height: 36px;
+  }
+}
