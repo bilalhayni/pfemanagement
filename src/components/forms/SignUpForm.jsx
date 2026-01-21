@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import Swal from 'sweetalert2';
 import MultiStepForm from './MultiStepForm';
 import './SignUpForm.css';
 
 const SignUpForm = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const steps = [
     {
@@ -61,10 +65,67 @@ const SignUpForm = () => {
     }
   ];
 
-  const handleSubmit = (formData) => {
-    console.log('Sign up data:', formData);
-    // Handle signup logic here
-    navigate('/');
+  const handleSubmit = async (formData) => {
+    if (isSubmitting) return;
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Les mots de passe ne correspondent pas',
+        confirmButtonColor: '#4f6bed'
+      });
+      return;
+    }
+
+    // Validate terms accepted
+    if (!formData.acceptTerms) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Vous devez accepter les conditions d\'utilisation',
+        confirmButtonColor: '#4f6bed'
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Prepare data for API
+    const registrationData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phone || '',
+      cne: formData.cne || '',
+      cin: formData.cin,
+      department: formData.department,
+      role: formData.role
+    };
+
+    const result = await register(registrationData);
+
+    setIsSubmitting(false);
+
+    if (result.success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Inscription réussie!',
+        text: 'Votre compte a été créé. Veuillez attendre l\'activation par l\'administrateur.',
+        confirmButtonColor: '#4f6bed'
+      }).then(() => {
+        navigate('/login');
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur d\'inscription',
+        text: result.error,
+        confirmButtonColor: '#4f6bed'
+      });
+    }
   };
 
   return (
@@ -80,6 +141,7 @@ const SignUpForm = () => {
           title="Créer un compte"
           subtitle="Rejoignez la plateforme PFE Manager"
           submitLabel="S'inscrire"
+          isSubmitting={isSubmitting}
         />
 
         <div className="signup-footer">

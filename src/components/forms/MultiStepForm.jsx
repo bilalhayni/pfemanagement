@@ -6,7 +6,8 @@ const MultiStepForm = ({
   onSubmit,
   submitLabel = "Soumettre",
   title,
-  subtitle
+  subtitle,
+  isSubmitting = false
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
@@ -86,61 +87,77 @@ const MultiStepForm = ({
             )}
 
             <div className="multistep-form__fields">
-              {steps[currentStep].fields.map((field) => (
-                <div key={field.name} className={`form-field ${field.fullWidth ? 'form-field--full' : ''}`}>
-                  <label className="form-field__label">
-                    {field.label}
-                    {field.required && <span className="form-field__required">*</span>}
-                  </label>
+              {steps[currentStep].fields.map((field) => {
+                const fieldId = `field-${field.name}`;
+                const hintId = field.hint ? `hint-${field.name}` : undefined;
 
-                  {field.type === 'select' ? (
-                    <select
-                      name={field.name}
-                      value={formData[field.name] || ''}
-                      onChange={handleChange}
-                      className="form-field__select"
-                      required={field.required}
-                    >
-                      <option value="">{field.placeholder || 'Sélectionner...'}</option>
-                      {field.options.map((opt) => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                      ))}
-                    </select>
-                  ) : field.type === 'textarea' ? (
-                    <textarea
-                      name={field.name}
-                      value={formData[field.name] || ''}
-                      onChange={handleChange}
-                      className="form-field__textarea"
-                      placeholder={field.placeholder}
-                      required={field.required}
-                      rows={field.rows || 4}
-                    />
-                  ) : field.type === 'checkbox' ? (
-                    <label className="form-field__checkbox">
-                      <input
-                        type="checkbox"
+                return (
+                  <div key={field.name} className={`form-field ${field.fullWidth ? 'form-field--full' : ''}`}>
+                    {field.type !== 'checkbox' && (
+                      <label htmlFor={fieldId} className="form-field__label">
+                        {field.label}
+                        {field.required && <span className="form-field__required">*</span>}
+                      </label>
+                    )}
+
+                    {field.type === 'select' ? (
+                      <select
+                        id={fieldId}
                         name={field.name}
-                        checked={formData[field.name] || false}
+                        value={formData[field.name] || ''}
                         onChange={handleChange}
+                        className="form-field__select"
+                        required={field.required}
+                        aria-describedby={hintId}
+                      >
+                        <option value="">{field.placeholder || 'Sélectionner...'}</option>
+                        {field.options.map((opt) => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    ) : field.type === 'textarea' ? (
+                      <textarea
+                        id={fieldId}
+                        name={field.name}
+                        value={formData[field.name] || ''}
+                        onChange={handleChange}
+                        className="form-field__textarea"
+                        placeholder={field.placeholder}
+                        required={field.required}
+                        rows={field.rows || 4}
+                        aria-describedby={hintId}
                       />
-                      <span className="form-field__checkbox-label">{field.checkboxLabel}</span>
-                    </label>
-                  ) : (
-                    <input
-                      type={field.type || 'text'}
-                      name={field.name}
-                      value={formData[field.name] || ''}
-                      onChange={handleChange}
-                      className="form-field__input"
-                      placeholder={field.placeholder}
-                      required={field.required}
-                    />
-                  )}
+                    ) : field.type === 'checkbox' ? (
+                      <label htmlFor={fieldId} className="form-field__checkbox">
+                        <input
+                          id={fieldId}
+                          type="checkbox"
+                          name={field.name}
+                          checked={formData[field.name] || false}
+                          onChange={handleChange}
+                          aria-describedby={hintId}
+                        />
+                        <span className="form-field__checkbox-label">{field.checkboxLabel}</span>
+                      </label>
+                    ) : (
+                      <input
+                        id={fieldId}
+                        type={field.type || 'text'}
+                        name={field.name}
+                        value={formData[field.name] || ''}
+                        onChange={handleChange}
+                        className="form-field__input"
+                        placeholder={field.placeholder}
+                        required={field.required}
+                        aria-describedby={hintId}
+                        autoComplete={field.type === 'email' ? 'email' : field.type === 'password' ? 'new-password' : undefined}
+                      />
+                    )}
 
-                  {field.hint && <span className="form-field__hint">{field.hint}</span>}
-                </div>
-              ))}
+                    {field.hint && <span id={hintId} className="form-field__hint">{field.hint}</span>}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -160,11 +177,26 @@ const MultiStepForm = ({
           </button>
 
           {isLastStep ? (
-            <button type="submit" className="multistep-form__btn multistep-form__btn--submit">
-              {submitLabel}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+            <button
+              type="submit"
+              className="multistep-form__btn multistep-form__btn--submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <svg className="spinner" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none" />
+                  </svg>
+                  Chargement...
+                </>
+              ) : (
+                <>
+                  {submitLabel}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </>
+              )}
             </button>
           ) : (
             <button
