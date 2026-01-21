@@ -1,8 +1,8 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-// Chef Département route (role === 1)
-const PrivateRoute = () => {
+// Admin route (role === 3)
+const PrivateRouteAdmin = () => {
   const auth = Cookies.get('auth');
   const role = Cookies.get('role');
 
@@ -10,11 +10,11 @@ const PrivateRoute = () => {
     return <Navigate to="/login" replace />;
   }
 
-  if (role !== '1') {
+  if (role !== '3') {
     return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;
 };
 
-export default PrivateRoute;
+export default PrivateRouteAdmin;
