@@ -3,7 +3,7 @@ import { Navbar } from '../navigation';
 import Header from './Header';
 import './Layout.css';
 
-const Layout = ({ children, pageTitle, userName, userInitials }) => {
+const Layout = ({ children, pageTitle, userName, userEmail, userInitials }) => {
   return (
     <div className="layout">
       <Navbar />
@@ -11,6 +11,7 @@ const Layout = ({ children, pageTitle, userName, userInitials }) => {
         <Header
           title={pageTitle}
           userName={userName}
+          userEmail={userEmail}
           userInitials={userInitials}
         />
         <main className="layout__content">
