@@ -1,0 +1,130 @@
+/* Login Container - Full page background */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #d4dde4 0%, #c8d5dc 25%, #e8ebe4 50%, #d8ddd4 75%, #ccd4cc 100%);
+  padding: 20px;
+}
+
+/* Login Card */
+.login-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 50px 60px;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Logo Section */
+.login-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.login-logo img {
+  max-width: 280px;
+  height: auto;
+}
+
+/* Title */
+.login-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+/* Form Styles */
+.login-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 15px;
+  color: #333333;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: #999999;
+}
+
+.form-input:focus {
+  border-bottom-color: #b87333;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
+}
+
+/* Login Button */
+.login-button {
+  background-color: #b87333;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #a56429;
+}
+
+.login-button:active {
+  transform: scale(0.98);
+}
+
+/* Footer - Sign up link */
+.login-footer {
+  text-align: center;
+  margin-top: 35px;
+}
+
+.signup-link {
+  color: #b87333;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.signup-link:hover {
+  color: #a56429;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 40px 30px;
+  }
+
+  .login-logo img {
+    max-width: 220px;
+  }
+
+  .login-title {
+    font-size: 22px;
+  }
+}
