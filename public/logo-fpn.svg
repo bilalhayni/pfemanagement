@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+  <!-- Diamond shape with mosque silhouette -->
+  <g transform="translate(10, 5)">
+    <!-- Outer diamond -->
+    <path d="M35 0 L70 35 L35 70 L0 35 Z" fill="none" stroke="#b87333" stroke-width="2"/>
+    <!-- Inner diamond -->
+    <path d="M35 5 L65 35 L35 65 L5 35 Z" fill="none" stroke="#b87333" stroke-width="1"/>
+    <!-- Mosque silhouette -->
+    <g fill="#b87333">
+      <!-- Central dome -->
+      <path d="M35 18 Q28 22 28 28 L28 45 L42 45 L42 28 Q42 22 35 18"/>
+      <!-- Left minaret -->
+      <rect x="18" y="25" width="6" height="25"/>
+      <rect x="17" y="22" width="8" height="3"/>
+      <path d="M21 22 L21 18 L21 22" stroke="#b87333" stroke-width="2"/>
+      <!-- Right minaret -->
+      <rect x="46" y="25" width="6" height="25"/>
+      <rect x="45" y="22" width="8" height="3"/>
+      <path d="M49 22 L49 18 L49 22" stroke="#b87333" stroke-width="2"/>
+      <!-- Door -->
+      <rect x="32" y="38" width="6" height="7" fill="white"/>
+    </g>
+  </g>
+
+  <!-- Text section -->
+  <g transform="translate(90, 0)">
+    <!-- Arabic text -->
+    <text x="0" y="22" font-family="Arial, sans-serif" font-size="14" fill="#b87333" direction="rtl">
+      الكلية متعددة التخصصات الناظور
+    </text>
+    <!-- Tifinagh text -->
+    <text x="0" y="42" font-family="Arial, sans-serif" font-size="12" fill="#b87333">
+      ⵜⴰⵙⴷⴰⵡⵉⵜ ⵜⴰⵅⴰⵜⴰⵔⵜ ⵏ ⵏⵏⴰⴹⵓⵕ
+    </text>
+    <!-- French text -->
+    <text x="0" y="62" font-family="Arial, sans-serif" font-size="14" fill="#b87333">
+      Faculté Pluridisciplinaire de Nador
+    </text>
+  </g>
+</svg>
