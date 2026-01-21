@@ -1,1 +1,8 @@
 export { default as Dashboard } from './Dashboard';
+export { default as Professeurs } from './Professeurs';
+export { default as Etudiants } from './Etudiants';
+export { default as MesPfes } from './MesPfes';
+export { default as TousLesPfes } from './TousLesPfes';
+export { default as PfesEtudiants } from './PfesEtudiants';
+export { default as Demandes } from './Demandes';
+export { default as Domaines } from './Domaines';

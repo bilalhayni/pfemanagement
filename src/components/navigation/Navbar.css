@@ -223,52 +223,6 @@
   }
 }
 
-/* Dark Mode Support (optional) */
-@media (prefers-color-scheme: dark) {
-  .navbar {
-    background-color: #1a1a2e;
-    border-right-color: #2d2d44;
-  }
-
-  .navbar__header {
-    border-bottom-color: #2d2d44;
-  }
-
-  .navbar__logo-text {
-    color: #ffffff;
-  }
-
-  .navbar__section-title {
-    color: #6b7280;
-  }
-
-  .navbar__link {
-    color: #9ca3af;
-  }
-
-  .navbar__link:hover {
-    background-color: #2d2d44;
-    color: #ffffff;
-  }
-
-  .navbar__link--active {
-    background-color: rgba(79, 107, 237, 0.15);
-    color: #4f6bed;
-  }
-
-  .navbar__link--active:hover {
-    background-color: rgba(79, 107, 237, 0.2);
-  }
-
-  .navbar__toggle:hover {
-    background-color: #2d2d44;
-  }
-
-  .navbar__toggle svg {
-    color: #9ca3af;
-  }
-}
-
 /* Utility class to offset main content */
 .navbar-offset {
   margin-left: 260px;
