@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import api from '../services/api';
+import { authService, profileService } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -30,25 +30,26 @@ export const AuthProvider = ({ children }) => {
       const authToken = Cookies.get('auth');
       const userRole = Cookies.get('role');
       const userId = Cookies.get('userId');
+      const filiereId = Cookies.get('filId');
 
-      if (authToken && userRole) {
+      if (authToken && userId) {
         try {
-          const response = await api.get('/verify-token');
-          if (response.data.valid) {
+          // Fetch user profile from backend
+          const response = await profileService.get(userId);
+          if (response.data) {
             setUser({
-              id: userId,
+              id: parseInt(userId),
               role: parseInt(userRole),
-              token: authToken,
-              ...response.data.user
+              idFiliere: parseInt(filiereId),
+              ...response.data
             });
-          } else {
-            logout();
           }
         } catch (error) {
+          // If profile fetch fails, use cookie data
           setUser({
-            id: userId,
+            id: parseInt(userId),
             role: parseInt(userRole),
-            token: authToken
+            idFiliere: parseInt(filiereId)
           });
         }
       }
@@ -60,75 +61,101 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await api.post('/login', { email, password });
+      const response = await authService.login(email, password);
 
-      if (response.data && !response.data.message) {
-        const userData = response.data[0];
+      // Backend returns user object directly on success
+      if (response.data && response.data.id) {
+        const userData = response.data;
 
-        if (userData.role === ROLES.STUDENT && userData.valid === 0) {
-          return {
-            success: false,
-            error: "Votre compte n'a pas été activé! Veuillez attendre que l'administrateur active votre compte"
-          };
-        }
-
-        Cookies.set('auth', 'true', { expires: 7 });
-        Cookies.set('role', userData.role.toString(), { expires: 7 });
-        Cookies.set('userId', userData.id?.toString() || userData.idProfesseur?.toString() || userData.idEtudiant?.toString(), { expires: 7 });
+        // Store in cookies
+        Cookies.set('auth', 'true', { expires: 1 });
+        Cookies.set('role', userData.role.toString(), { expires: 1 });
+        Cookies.set('userId', userData.id.toString(), { expires: 1 });
+        Cookies.set('filId', userData.idFiliere?.toString() || '', { expires: 1 });
 
         setUser({
-          id: userData.id || userData.idProfesseur || userData.idEtudiant,
+          id: userData.id,
           role: userData.role,
           email: userData.email,
           firstName: userData.firstName,
           lastName: userData.lastName,
-          ...userData
+          idFiliere: userData.idFiliere
         });
 
         return { success: true, role: userData.role };
       }
 
+      // Backend returns { message: "error" } on failure
       return {
         success: false,
-        error: 'Mauvaise combinaison email/mot de passe!'
+        error: response.data?.message || 'Mauvaise combinaison email/mot de passe!'
       };
     } catch (error) {
-      return {
-        success: false,
-        error: error.response?.data?.message || 'Une erreur est survenue'
-      };
+      const errorMessage = error.response?.data?.message || 'Une erreur est survenue';
+
+      // Handle specific error cases
+      if (error.response?.status === 401) {
+        return { success: false, error: 'Mauvaise combinaison email/mot de passe!' };
+      }
+      if (error.response?.status === 403) {
+        return { success: false, error: "Votre compte n'a pas encore été activé" };
+      }
+
+      return { success: false, error: errorMessage };
     }
   };
 
   const register = async (userData) => {
     try {
-      const response = await api.post('/registerStudent', userData);
+      const response = await authService.register(userData);
 
-      if (response.data.message) {
-        return { success: false, error: response.data.message };
+      // Backend returns { message: "success" } or { message: "error" }
+      if (response.status === 201 || response.data?.userId) {
+        return { success: true };
       }
 
-      return { success: true };
-    } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || "Une erreur est survenue lors de l'inscription"
+        error: response.data?.message || "Une erreur est survenue lors de l'inscription"
       };
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Une erreur est survenue lors de l'inscription";
+
+      if (error.response?.status === 400) {
+        return { success: false, error: errorMessage };
+      }
+
+      return { success: false, error: errorMessage };
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      // Continue with logout even if API call fails
+    }
+
     Cookies.remove('auth');
     Cookies.remove('role');
     Cookies.remove('userId');
+    Cookies.remove('filId');
     setUser(null);
   };
 
   const resetPassword = async (email) => {
     try {
-      await api.post('/reset-password-email', { email });
-      return { success: true };
+      const response = await authService.resetPassword(email);
+
+      if (response.data?.message === 'Password sent to your email') {
+        return { success: true };
+      }
+
+      return { success: true }; // Assume success if no error
     } catch (error) {
+      if (error.response?.status === 404) {
+        return { success: false, error: "Cet email n'est pas enregistré" };
+      }
       return { success: false, error: "Erreur lors de l'envoi du mot de passe" };
     }
   };

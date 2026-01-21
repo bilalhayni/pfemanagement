@@ -31,101 +31,131 @@ api.interceptors.response.use(
       Cookies.remove('auth');
       Cookies.remove('role');
       Cookies.remove('userId');
+      Cookies.remove('filId');
       window.location.href = '/login';
     }
     return Promise.reject(error);
   }
 );
 
-// PFE Services
-export const pfeService = {
-  getAll: () => api.get('/pfe'),
-  getById: (id) => api.get(`/pfe/${id}`),
-  getByProfessor: (profId) => api.get(`/pfe/prof/${profId}`),
-  getByStudent: (studentId) => api.get(`/pfe/student/${studentId}`),
-  create: (data) => api.post('/pfe', data),
-  update: (id, data) => api.put(`/pfe/${id}`, data),
-  delete: (id) => api.delete(`/pfe/${id}`),
-  assignStudent: (pfeId, studentId) => api.post(`/pfe/${pfeId}/assign`, { studentId }),
-  updateProgress: (pfeId, progress) => api.put(`/pfe/${pfeId}/progress`, { progress })
+// ==================== Auth Services ====================
+export const authService = {
+  login: (email, password) => api.post('/login', { email, password }),
+  logout: () => api.post('/logout'),
+  register: (data) => api.post('/registerStudent', data),
+  resetPassword: (email) => api.post('/reset-password-email', { email })
 };
 
-// Professor Services
-export const professorService = {
-  getAll: () => api.get('/professeurs'),
-  getById: (id) => api.get(`/professeurs/${id}`),
-  create: (data) => api.post('/professeurs', data),
-  update: (id, data) => api.put(`/professeurs/${id}`, data),
-  delete: (id) => api.delete(`/professeurs/${id}`)
-};
-
-// Student Services
-export const studentService = {
-  getAll: () => api.get('/etudiants'),
-  getById: (id) => api.get(`/etudiants/${id}`),
-  getActivated: () => api.get('/etudiants/activated'),
-  getPending: () => api.get('/etudiants/pending'),
-  create: (data) => api.post('/registerStudent', data),
-  update: (id, data) => api.put(`/etudiants/${id}`, data),
-  delete: (id) => api.delete(`/etudiants/${id}`),
-  activate: (id) => api.put(`/etudiants/${id}/activate`),
-  deactivate: (id) => api.put(`/etudiants/${id}/deactivate`)
-};
-
-// Domain Services
-export const domainService = {
-  getAll: () => api.get('/domaines'),
-  getById: (id) => api.get(`/domaines/${id}`),
-  create: (data) => api.post('/domaines', data),
-  update: (id, data) => api.put(`/domaines/${id}`, data),
-  delete: (id) => api.delete(`/domaines/${id}`)
-};
-
-// Prerequisite Services
-export const prerequisiteService = {
-  getAll: () => api.get('/prerequis'),
-  getByFiliere: (filiereId) => api.get(`/prerequis/filiere/${filiereId}`),
-  create: (data) => api.post('/prerequis', data),
-  update: (id, data) => api.put(`/prerequis/${id}`, data),
-  delete: (id) => api.delete(`/prerequis/${id}`)
-};
-
-// Filiere Services
+// ==================== Filiere Services ====================
 export const filiereService = {
   getAll: () => api.get('/filiere'),
-  getById: (id) => api.get(`/filiere/${id}`),
-  create: (data) => api.post('/filiere', data),
-  update: (id, data) => api.put(`/filiere/${id}`, data),
-  delete: (id) => api.delete(`/filiere/${id}`)
+  create: (name) => api.post('/addFiliere', { name })
 };
 
-// Demande Services
+// ==================== Prerequisite Services ====================
+export const prerequisiteService = {
+  getAll: () => api.get('/prerequi'),
+  getByFiliere: (filiereId) => api.get(`/prerequisFil/${filiereId}`),
+  create: (data) => api.post('/addPrerequi', data)
+};
+
+// ==================== Domain Services ====================
+export const domainService = {
+  getByFiliere: (filiereId) => api.get(`/domaineFil/${filiereId}`),
+  create: (data) => api.post('/addDomaine', data)
+};
+
+// ==================== Profile Services ====================
+export const profileService = {
+  get: (userId) => api.get(`/profile/${userId}`),
+  getStudent: (userId) => api.get(`/profileStd/${userId}`),
+  update: (data) => api.put('/updateProfile', data)
+};
+
+// ==================== Professor Services ====================
+export const professorService = {
+  getByFiliere: (filiereId) => api.get(`/prof/${filiereId}`),
+  getAll: () => api.get('/allProf'),
+  getCount: () => api.get('/numProf'),
+  getCountByFiliere: (filiereId) => api.get(`/numProfChedDep/${filiereId}`)
+};
+
+// ==================== Chef Departement Services ====================
+export const chefDepService = {
+  getAll: () => api.get('/allChefDep'),
+  getCount: () => api.get('/numChefDep')
+};
+
+// ==================== Student Services ====================
+export const studentService = {
+  getByFiliere: (filiereId) => api.get(`/stdListe/${filiereId}`),
+  getPending: () => api.get('/stdListe'),
+  getActivated: () => api.get('/stdListeAct'),
+  getCount: () => api.get('/numStd'),
+  getCountByFiliere: (filiereId) => api.get(`/numStdChedDep/${filiereId}`),
+  getPrerequisites: (userId) => api.get(`/prerequisStd/${userId}`),
+  activate: (id) => api.put('/validStd', { id }),
+  delete: (id) => api.delete(`/deleteUser/${id}`)
+};
+
+// ==================== Admin Services ====================
+export const adminService = {
+  createAccount: (data) => api.post('/adminCreate', data)
+};
+
+// ==================== PFE Services ====================
+export const pfeService = {
+  // Create
+  create: (data) => api.post('/newPfe', data),
+
+  // Read
+  getMyPfes: (profId) => api.get(`/myPfe/${profId}`),
+  getAllByFiliere: (filiereId) => api.get(`/allPfe/${filiereId}`),
+  getAllForStudents: (filiereId) => api.get(`/allPfeStd/${filiereId}`),
+  getSingle: (pfeId) => api.get(`/SinglePfe/${pfeId}`),
+  getPrerequisites: (pfeId) => api.get(`/prerequisPfe/${pfeId}`),
+  getCountByFiliere: (filiereId) => api.get(`/numPfe/${filiereId}`),
+  getCountByProf: (profId) => api.get(`/numPfeProf/${profId}`),
+
+  // Update
+  update: (data) => api.put('/updatePfe', data),
+  updateProgress: (id, avancement) => api.put('/updateavan', { id, avancement }),
+  updateDefenseDate: (id, date) => api.put('/updateDateSout', { id, date }),
+
+  // Delete
+  delete: (pfeId) => api.delete(`/deletePfe/${pfeId}`)
+};
+
+// ==================== Demande Services ====================
 export const demandeService = {
-  getAll: () => api.get('/demandes'),
-  getByProfessor: (profId) => api.get(`/demandes/prof/${profId}`),
-  getByStudent: (studentId) => api.get(`/demandes/student/${studentId}`),
-  create: (data) => api.post('/demandes', data),
-  approve: (id) => api.put(`/demandes/${id}/approve`),
-  reject: (id) => api.put(`/demandes/${id}/reject`),
-  delete: (id) => api.delete(`/demandes/${id}`)
+  // Create
+  create: (data) => api.post('/addDemande', data),
+
+  // Read
+  getByProf: (profId) => api.get(`/demandes/${profId}`),
+  getStudentPfes: (profId) => api.get(`/stdPfe/${profId}`),
+  getStudentApplications: (userId) => api.get(`/pfeOfStd/${userId}`),
+  getStudentAssignedPfe: (userId) => api.get(`/MypfeOfStd/${userId}`),
+
+  // Update
+  approve: (id) => api.put('/affectPfe', { id }),
+
+  // Delete
+  delete: (demandeId) => api.delete(`/deleteDemande/${demandeId}`)
 };
 
-// Postulation Services (Student applications)
-export const postulationService = {
-  getByStudent: (studentId) => api.get(`/postulations/student/${studentId}`),
-  getByPfe: (pfeId) => api.get(`/postulations/pfe/${pfeId}`),
-  create: (data) => api.post('/postulations', data),
-  accept: (id) => api.put(`/postulations/${id}/accept`),
-  reject: (id) => api.put(`/postulations/${id}/reject`),
-  cancel: (id) => api.delete(`/postulations/${id}`)
-};
-
-// Dashboard Statistics
+// ==================== Stats Services ====================
 export const statsService = {
-  getDashboard: () => api.get('/stats/dashboard'),
-  getPfeStats: () => api.get('/stats/pfe'),
-  getStudentStats: () => api.get('/stats/students'),
-  getProfessorStats: () => api.get('/stats/professors')
+  // Dashboard stats
+  getDashboard: (filiereId) => api.get(`/stats/dashboard/${filiereId}`),
+
+  // Chart data
+  getProfChart: () => api.get('/profChart'),
+  getChefPfeProgress: (profId) => api.get(`/chefDepadv/${profId}`),
+  getAllPfeProgress: (filiereId) => api.get(`/chefDepadvAll/${filiereId}`),
+
+  // Count endpoints
+  getDomainCount: (filiereId) => api.get(`/numDomaines/${filiereId}`)
 };
 
 export default api;

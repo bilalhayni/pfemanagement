@@ -24,14 +24,19 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchDashboardData = async () => {
+      if (!user?.idFiliere) {
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError(null);
 
       try {
-        // Fetch dashboard stats and PFE data in parallel
-        const [dashboardResponse, pfeResponse] = await Promise.all([
-          statsService.getDashboard().catch(() => null),
-          pfeService.getAll().catch(() => null)
+        // Fetch dashboard stats and PFE progress in parallel
+        const [dashboardResponse, pfeProgressResponse] = await Promise.all([
+          statsService.getDashboard(user.idFiliere).catch(() => null),
+          statsService.getAllPfeProgress(user.idFiliere).catch(() => null)
         ]);
 
         // Process dashboard stats
@@ -39,12 +44,12 @@ const Dashboard = () => {
           setStats(dashboardResponse.data);
         }
 
-        // Process PFE data for charts
-        if (pfeResponse?.data) {
-          const pfes = Array.isArray(pfeResponse.data) ? pfeResponse.data : [];
-          const inProgress = pfes.filter(pfe => pfe.status === 'en_cours' || pfe.progress < 100).length;
-          const completed = pfes.filter(pfe => pfe.status === 'termine' || pfe.progress === 100).length;
-          setPfeStats({ inProgress, completed, total: pfes.length });
+        // Process PFE progress data for charts
+        if (pfeProgressResponse?.data) {
+          const progressData = Array.isArray(pfeProgressResponse.data) ? pfeProgressResponse.data : [];
+          const inProgress = progressData.find(p => p.avancement === 'En cours')?.num || 0;
+          const completed = progressData.find(p => p.avancement === 'Terminé')?.num || 0;
+          setPfeStats({ inProgress, completed, total: inProgress + completed });
         }
       } catch (err) {
         setError('Erreur lors du chargement des données');
@@ -54,7 +59,7 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, [user?.idFiliere]);
 
   // Stats cards data - use API data or fallback to 0
   const statsCards = [
